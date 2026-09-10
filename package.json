@@ -1,0 +1,20 @@
+{
+  "name": "synesthetic-motion",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "p5": "^1.11.2",
+    "tone": "^15.0.4"
+  },
+  "devDependencies": {
+    "@types/p5": "^1.7.6",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5"
+  }
+}
