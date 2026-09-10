@@ -4,11 +4,13 @@ const TRANSITION_SPEED = 0.09;
 
 export class Dancer {
   pos: Vec2;
+  prev: Vec2; // position last frame, so the art layer can draw motion
   target: Vec2;
   name: string;
 
   constructor(start: Vec2, name: string) {
     this.pos = { ...start };
+    this.prev = { ...start };
     this.target = { ...start };
     this.name = name;
   }
@@ -19,13 +21,20 @@ export class Dancer {
 
   /** Snap instantly, e.g. while the user is dragging. */
   moveTo(p: Vec2) {
+    this.prev = { ...this.pos };
     this.pos = { ...p };
     this.target = { ...p };
   }
 
   update() {
+    this.prev = { ...this.pos };
     this.pos.x += (this.target.x - this.pos.x) * TRANSITION_SPEED;
     this.pos.y += (this.target.y - this.pos.y) * TRANSITION_SPEED;
+  }
+
+  /** Distance moved this frame, for velocity-driven art and sound. */
+  speed(): number {
+    return Math.hypot(this.pos.x - this.prev.x, this.pos.y - this.prev.y);
   }
 }
 

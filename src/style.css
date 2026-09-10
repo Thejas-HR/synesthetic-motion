@@ -97,6 +97,22 @@ button.primary {
 }
 button.primary:hover { filter: brightness(1.06); }
 
+button.ghost {
+  width: 100%;
+  margin-top: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+}
+button.ghost:hover { background: #20202a; color: var(--text); }
+
+button.toggle { width: 100%; }
+button.toggle.active {
+  background: #223022;
+  border-color: #5aa06e;
+  color: #9ff0b4;
+}
+
 .saved {
   display: flex;
   flex-wrap: wrap;

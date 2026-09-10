@@ -1,6 +1,8 @@
 import "./style.css";
 import { StageSketch } from "./stage";
 import { Dancer, assignNearest } from "./dancer";
+import { AudioEngine } from "./audio";
+import type { ArtMode } from "./art";
 import {
   generatorList,
   generators,
@@ -43,6 +45,17 @@ app.innerHTML = `
     </section>
 
     <section>
+      <h2>Art</h2>
+      <div class="gen-grid" id="art-modes"></div>
+      <button id="clear-art" class="ghost">Clear canvas</button>
+    </section>
+
+    <section>
+      <h2>Sound</h2>
+      <button id="sound" class="toggle">Sound off</button>
+    </section>
+
+    <section>
       <button id="save" class="primary">Save current formation</button>
       <div class="saved" id="saved"></div>
     </section>
@@ -58,6 +71,7 @@ const saved: SavedFormation[] = [];
 let activeGen: GeneratorId = "circle";
 
 const sketch = new StageSketch(document.getElementById("stage")!);
+const audio = new AudioEngine();
 
 function rebuildDancers() {
   const next: Dancer[] = [];
@@ -82,6 +96,7 @@ function applyGenerator(id: GeneratorId) {
   activeGen = id;
   const targets = generators[id].generate(count, sketch.stage, params);
   assignNearest(dancers, targets);
+  audio.playFormation(dancers, sketch.stage);
   markActiveGen();
 }
 
@@ -95,6 +110,7 @@ function applySaved(i: number) {
   const f = saved[i];
   if (f.positions.length !== dancers.length) rebuildToCount(f.positions.length);
   assignNearest(dancers, f.positions);
+  audio.playFormation(dancers, sketch.stage);
 }
 
 function rebuildToCount(n: number) {
@@ -146,6 +162,44 @@ for (const key of ["spread", "rotation", "skew"] as const) {
     applyGenerator(activeGen);
   };
 }
+
+// Art mode buttons
+const artModes: { id: ArtMode; label: string }[] = [
+  { id: "ribbon", label: "Ribbon" },
+  { id: "web", label: "Web" },
+  { id: "bloom", label: "Bloom" },
+  { id: "off", label: "Off" },
+];
+const artEl = document.getElementById("art-modes")!;
+for (const m of artModes) {
+  const b = document.createElement("button");
+  b.textContent = m.label;
+  b.dataset.mode = m.id;
+  b.onclick = () => {
+    sketch.art.setMode(m.id);
+    artEl.querySelectorAll("button").forEach((x) =>
+      x.classList.toggle("active", (x as HTMLElement).dataset.mode === m.id)
+    );
+  };
+  artEl.appendChild(b);
+}
+artEl.querySelector('[data-mode="ribbon"]')!.classList.add("active");
+
+document.getElementById("clear-art")!.onclick = () => sketch.art.clear();
+
+const soundBtn = document.getElementById("sound") as HTMLButtonElement;
+soundBtn.onclick = async () => {
+  if (audio.enabled) {
+    audio.disable();
+    soundBtn.textContent = "Sound off";
+    soundBtn.classList.remove("active");
+  } else {
+    await audio.enable();
+    soundBtn.textContent = "Sound on";
+    soundBtn.classList.add("active");
+    audio.playFormation(dancers, sketch.stage);
+  }
+};
 
 document.getElementById("save")!.onclick = saveCurrent;
 

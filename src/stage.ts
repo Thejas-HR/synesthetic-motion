@@ -1,5 +1,6 @@
 import p5 from "p5";
 import { Dancer } from "./dancer";
+import { ArtLayer } from "./art";
 import type { Stage, Vec2 } from "./formations";
 
 const DANCER_SIZE = 26;
@@ -9,6 +10,7 @@ export class StageSketch {
   p!: p5;
   dancers: Dancer[] = [];
   stage: Stage = { x: 0, y: 0, w: 0, h: 0 };
+  art = new ArtLayer();
   private dragging = -1;
   onDragEnd: (() => void) | null = null;
   onReady: (() => void) | null = null;
@@ -53,6 +55,12 @@ export class StageSketch {
     const p = this.p;
     p.background(12, 12, 16);
 
+    // Advance dancers first so the art layer draws from current positions.
+    for (const d of this.dancers) d.update();
+
+    // Art (the "image" half) sits under the stage furniture and dancers.
+    this.art.draw(p, this.dancers);
+
     // Stage frame
     p.noFill();
     p.stroke(60, 60, 72);
@@ -75,7 +83,6 @@ export class StageSketch {
 
     for (let i = 0; i < this.dancers.length; i++) {
       const d = this.dancers[i];
-      d.update();
       const hot = i === this.dragging;
       p.noStroke();
       p.fill(hot ? p.color(255, 210, 120) : p.color(250, 175, 255, 220));
