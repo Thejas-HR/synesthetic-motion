@@ -122,3 +122,51 @@ colored square drawn on the buffer proved the color pipeline was fine all along
 losing their saturation, made worse by the per-frame fade. Fix was full-opacity
 color plus the glow underlay, with the fade kept light. Lesson: isolate the
 variable (draw a solid shape) before tuning ten parameters blind.
+
+---
+
+## Chapter 5 — The reset: it looked nicer and did less
+
+After Phase 2, the honest reaction: it felt *cheaper* than the original, and
+still useless. Both were fair, and worth recording because this is the real turn
+of the project.
+
+**Why it felt like less.** Phase 1 chased "beyond 20 formations" and in doing so
+dropped the original's actual spine: record → timeline → play back a sequence.
+What was left was a prettier sandbox with no timeline and nothing you could keep.
+More capability, less product. Prettier trails do not make up for having removed
+the one structure that made it a tool.
+
+**Why it felt useless.** Phases 1–2 built *capabilities* (generators, art,
+sound) and mistook them for a product. There was no flow: you land, you fiddle,
+you leave with nothing. Nobody has a reason to arrive and nobody leaves with
+anything. A pile of features is not a reason to use something. The mistake was
+picking an *identity* (tool + art) without ever designing the *job-to-be-done*:
+who arrives, what they're making, what they walk away with.
+
+**The decision (job-to-be-done).** This is a **formation planner for a routine**.
+
+- User: a dance teacher / choreographer planning a piece.
+- Job: map where everyone stands through the whole routine.
+- Leaves with: a formation map + shareable playback link the dancers rehearse
+  from. The *output* is the value.
+
+**The flow.** Start a Piece (name, cast) → build a timed sequence of formations
+(generators + drag to place, add each to a timeline) → set transition timings /
+reorder → preview the routine playing through → export a formation map / link /
+video.
+
+**The reframe that makes the art useful.** In preview, trails are not decoration
+— they are the **movement paths**, colour-coded per dancer: who travels where
+between formations, where paths cross, where spacing tightens. Still beautiful,
+now it's information. Sound becomes an optional review layer, not the point.
+
+**Consequence for the build.** The engine modules (formations, dancer, art,
+audio) survive, but the app is restructured around a **Piece + timeline** as the
+backbone, with export as the payoff. Visual becomes a real design pass (a
+considered planning surface / marked stage, named dancer tokens, an editor-style
+timeline — not a black void with neon), shown as directions to choose from.
+
+**Status: paused here.** Flow agreed (choreographer plan, formation-map output,
+art-as-paths). Next session starts by rebuilding around the Piece + timeline
+before any polish. Nothing built for this chapter yet — this is the plan.
